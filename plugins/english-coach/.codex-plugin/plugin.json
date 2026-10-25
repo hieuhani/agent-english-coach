@@ -1,0 +1,22 @@
+{
+  "name": "english-coach",
+  "version": "0.2.0",
+  "license": "MIT",
+  "description": "Critiques the English in every prompt you write and saves the feedback to a daily journal, with a weekly grammar review skill",
+  "author": {
+    "name": "hieuhani",
+    "email": "hieutran.fu@gmail.com"
+  },
+  "keywords": [
+    "english",
+    "grammar",
+    "learning",
+    "writing"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/codex-hooks.json",
+  "interface": {
+    "displayName": "English Coach",
+    "shortDescription": "Learn English from your own prompts"
+  }
+}

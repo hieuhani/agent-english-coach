@@ -1,0 +1,13 @@
+{
+  "name": "english-coach",
+  "version": "0.2.0",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "description": "omp entry point for the English coach plugin",
+  "omp": {
+    "extensions": [
+      "./omp/english-coach.ts"
+    ]
+  }
+}

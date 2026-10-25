@@ -1,0 +1,27 @@
+{
+  "description": "English coach: language reminder at session start, background critique of each prompt",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session_start.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/capture.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

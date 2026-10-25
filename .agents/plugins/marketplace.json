@@ -1,0 +1,17 @@
+{
+  "name": "agent-english-coach",
+  "plugins": [
+    {
+      "name": "english-coach",
+      "source": {
+        "source": "local",
+        "path": "./plugins/english-coach"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
