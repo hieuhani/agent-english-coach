@@ -1,6 +1,6 @@
 {
   "name": "english-coach",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "description": "Critiques the English in every prompt you write and saves the feedback to a daily journal, with a weekly grammar review skill",
   "author": {
@@ -17,6 +17,9 @@
   "hooks": "./hooks/codex-hooks.json",
   "interface": {
     "displayName": "English Coach",
-    "shortDescription": "Learn English from your own prompts"
+    "shortDescription": "Learn English from your own prompts",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "brandColor": "#4F46E5"
   }
 }
