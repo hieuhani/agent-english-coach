@@ -26,12 +26,12 @@ The hook skips prompts shorter than 5 words, slash commands and fenced code bloc
 
 All three call the same `hooks/capture.py` and share `skills/review/SKILL.md`.
 
-### Install
+## Install
 
 From GitHub (`hieuhani/agent-english-coach`) or a local path to this repo:
 
 ```sh
-# Claude Code — then use /english-coach:review
+# Claude Code
 claude plugin marketplace add hieuhani/agent-english-coach
 claude plugin install english-coach@agent-english-coach
 
@@ -46,7 +46,66 @@ omp plugin install english-coach@agent-english-coach
 
 Requires `python3`, plus at least one of `claude`, `codex` or `omp` to run the analysis.
 
-### Configure
+## Commands
+
+### Inside your agent
+
+| Action | Claude Code | Codex | omp |
+|---|---|---|---|
+| Review the last 7 days | `/english-coach:review` | `$english-coach:review` | `/skill:review` |
+| Review the last N days | `/english-coach:review 30` | `$english-coach:review 30` | `/skill:review 30` |
+| Trust the hooks (once, after install) | — | `/hooks` | — |
+| Browse installed plugins | `/plugin` | `/plugins` | `/marketplace` |
+
+You can also ask in plain English, for example *"Review my English journal"*, and the agent loads the skill itself.
+
+Prompts are captured automatically, so there's no command for that. After installing or updating, start a new session so the agent loads the hooks.
+
+### Managing the plugin (in a terminal)
+
+| Action | Claude Code | Codex | omp |
+|---|---|---|---|
+| List plugins | `claude plugin list` | `codex plugin list` | `omp plugin list` |
+| Update | `claude plugin update english-coach@agent-english-coach` | `codex plugin add english-coach@agent-english-coach` | `omp plugin upgrade english-coach@agent-english-coach` |
+| Disable | `claude plugin disable english-coach@agent-english-coach` | set `enabled = false` under `[plugins."english-coach@agent-english-coach"]` in `~/.codex/config.toml` | `omp plugin disable english-coach@agent-english-coach` |
+| Enable | `claude plugin enable english-coach@agent-english-coach` | set `enabled = true` in the same place | `omp plugin enable english-coach@agent-english-coach` |
+| Uninstall | `claude plugin uninstall english-coach@agent-english-coach` | `codex plugin remove english-coach@agent-english-coach` | `omp plugin uninstall english-coach@agent-english-coach` |
+
+Before updating, refresh the marketplace so the agent sees the new version: `claude plugin marketplace update agent-english-coach` or `omp plugin marketplace update agent-english-coach`. Codex reads the marketplace again on `codex plugin add`.
+
+### Reading your journal
+
+| File | What's in it |
+|---|---|
+| `~/english-journal/YYYY-MM-DD.md` | Feedback on every prompt from that day |
+| `~/english-journal/prompts.jsonl` | Your raw prompts, one JSON object per line |
+| `~/english-journal/mistakes.md` | Summaries from each review, used to track progress |
+
+```sh
+open ~/english-journal/$(date +%F).md    # today's feedback (macOS)
+ls ~/english-journal                       # all days
+```
+
+Prompts are skipped when they're shorter than 5 words or start with `/`. Fenced code blocks are removed before the analysis.
+
+### Development
+
+```sh
+# Run the hook by hand, writing to a test journal
+echo '{"prompt": "I has two cat and I want know more about them."}' \
+  | ENGLISH_JOURNAL_DIR=/tmp/english-test python3 plugins/english-coach/hooks/capture.py
+
+# Validate the marketplace and the plugin
+claude plugin validate .
+claude plugin validate plugins/english-coach
+
+# Re-render the icon after editing the script (macOS, needs Pillow)
+python3 scripts/make_icon.py plugins/english-coach/assets/icon.png
+```
+
+After you edit the plugin, bump `version` in `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `package.json`, because each agent caches installed plugins by version. Then run the update commands above.
+
+## Configure
 
 Set these environment variables in your shell profile:
 
@@ -56,17 +115,7 @@ Set these environment variables in your shell profile:
 | `ENGLISH_COACH_MODEL` | `sonnet` for Claude; the agent's own default otherwise | The model that writes the critique |
 | `ENGLISH_JOURNAL_DIR` | `~/english-journal` | Where the journal is saved |
 
-### Updating after you edit the plugin
-
-Each agent installs a cached copy, so bump `version` in `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `package.json`, then run:
-
-```sh
-claude plugin marketplace update agent-english-coach && claude plugin update english-coach@agent-english-coach
-codex plugin add english-coach@agent-english-coach
-omp plugin marketplace update agent-english-coach && omp plugin upgrade english-coach@agent-english-coach
-```
-
-### Cost and privacy
+## Cost and privacy
 
 Each prompt you write starts one extra agent call, which counts against that agent's usage. The journal stays on your machine.
 
